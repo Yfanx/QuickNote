@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.4.1**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.4.2**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -30,7 +30,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.4.1，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.4.2，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -89,3 +89,5 @@ node_modules/.bin/electron tests/github-update-check.cjs
 设置→行为→默认打开：可选择待办事项或快速记录（默认待办）。点击托盘图标、重复启动或非后台启动使用此偏好；两个全局快捷键及托盘明确入口不受影响。
 
 ![默认打开设置](docs/images/behavior.png)
+
+4.4.2：修复开机启动开关回弹。注册和读取使用同一可执行路径及--background参数，核对Windows启用状态；设置和托盘同步，其他偏好修改不重复改写启动项。

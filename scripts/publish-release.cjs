@@ -13,7 +13,7 @@ async function main(){
   const headers={Authorization:'Bearer '+fields.password,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'QuickNote-Release'},base='https://api.github.com/repos/Yfanx/QuickNote';
   async function request(url,method='GET',body){const r=await fetch(url,{method,headers:{...headers,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error('GitHub API '+r.status);return r.status===204?null:r.json()}
   const releases=await request(base+'/releases?per_page=100');let release=releases.find(r=>r.tag_name==='v'+version);
-  if(!release)release=await request(base+'/releases','POST',{tag_name:'v'+version,name:'QuickNote '+version,draft:true,prerelease:false,body:'精简外观与关于页面：移除占位文字保存提示、产品介绍、素材说明和更新说明小字；保留版本、实时更新状态、操作按钮与许可证入口。行为设置新增默认打开页面，支持托盘点击打开待办事项或快速记录。\n\n新增软件内更新：启动后后台检查，设置→关于可手动检查、下载与重启安装，保留任务和设置。4.3.x 及更早版本需先手动安装本版一次。\n\nWindows x64 安装包：QuickNote-Setup-'+version+'-x64.exe。latest.yml 与 blockmap 用于自动更新。'});
+  if(!release)release=await request(base+'/releases','POST',{tag_name:'v'+version,name:'QuickNote '+version,draft:true,prerelease:false,body:'修复开机启动开关：统一注册与读取的可执行路径和后台参数，操作后核对Windows实际状态；设置页与托盘状态保持一致。\n\n新增软件内更新：启动后后台检查，设置→关于可手动检查、下载与重启安装，保留任务和设置。4.3.x 及更早版本需先手动安装本版一次。\n\nWindows x64 安装包：QuickNote-Setup-'+version+'-x64.exe。latest.yml 与 blockmap 用于自动更新。'});
   // Publish only after every asset is ready, so clients never see an incomplete update.
   for(const file of [installer,blockmap,metadata]){
     const name=path.basename(file),existing=release.assets.find(a=>a.name===name);

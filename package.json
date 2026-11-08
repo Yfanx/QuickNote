@@ -1,6 +1,6 @@
 {
   "name": "quicknote",
-  "version": "4.4.1",
+  "version": "4.4.2",
   "description": "Keyboard-driven local quick capture",
   "author": "QuickNote",
   "main": "electron/main.cjs",
@@ -14,7 +14,7 @@
     "appId": "local.quicknote.desktop",
     "productName": "QuickNote",
     "directories": {
-      "output": "release/4.4.1"
+      "output": "release/4.4.2"
     },
     "files": [
       "dist/**/*",
@@ -28,7 +28,8 @@
       "assets/THIRD_PARTY_NOTICES.txt",
       "electron/time.cjs",
       "electron/reminders.cjs",
-      "electron/updates.cjs"
+      "electron/updates.cjs",
+      "electron/startup.cjs"
     ],
     "win": {
       "target": "nsis",
