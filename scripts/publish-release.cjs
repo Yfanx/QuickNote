@@ -1,4 +1,27 @@
-// Uses the existing Git Credential Manager login; never prints or writes credentials.
-const fs=require('fs'),path=require('path'),cp=require('child_process');
-async function main(){const version=process.argv[2],file=process.argv[3];if(!/^\d+\.\d+\.\d+$/.test(version||'')||!file||!fs.existsSync(file))throw Error('Usage: node scripts/publish-release.cjs VERSION INSTALLER');const cred=cp.execFileSync('git',['-c','credential.helper=','-c','credential.helper=manager','credential','fill'],{input:'protocol=https\nhost=github.com\n\n',encoding:'utf8',stdio:['pipe','pipe','pipe']});const fields=Object.fromEntries(cred.trim().split('\n').map(l=>{const i=l.indexOf('=');return [l.slice(0,i),l.slice(i+1)]}));if(!fields.password)throw Error('GitHub login unavailable');const headers={Authorization:'Bearer '+fields.password,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'QuickNote-Release'};const base='https://api.github.com/repos/Yfanx/QuickNote';async function request(url,method='GET',body){const r=await fetch(url,{method,headers:{...headers,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error('GitHub API '+r.status+' '+url.replace(/\?.*/,''));return r.status===204?null:r.json()}
-let response=await fetch(base+'/releases/tags/v'+version,{headers}),release;if(response.status===404)release=await request(base+'/releases','POST',{tag_name:'v'+version,name:'QuickNote '+version,body:'Deadline 简化为逾期与月份横线分组，右侧显示 days left / days past；任意时间汇总全部未完成任务，日历增加 Today 星标。\n\nWindows x64 NSIS 安装包见下方 Assets。安装前请从托盘退出旧版。现有任务和设置继续保留。',draft:false,prerelease:false});else{if(!response.ok)throw Error('Release lookup failed: '+response.status);release=await response.json()}const name=path.basename(file),existing=release.assets.find(a=>a.name===name);if(existing){if(existing.size!==fs.statSync(file).size)throw Error('Asset exists with different size; refusing overwrite');console.log(existing.browser_download_url);return}const upload=release.upload_url.split('{')[0]+'?name='+encodeURIComponent(name);const result=await fetch(upload,{method:'POST',headers:{...headers,'Content-Type':'application/octet-stream','Content-Length':String(fs.statSync(file).size)},body:await fs.openAsBlob(file)});if(!result.ok)throw Error('Installer upload failed: '+result.status);const asset=await result.json();console.log(release.html_url);console.log(asset.browser_download_url)}main().catch(e=>{console.error(e.message);process.exitCode=1});
+// Reuses Git Credential Manager. Credentials are never printed, saved, or bundled.
+const fs=require('fs'),path=require('path'),cp=require('child_process'),crypto=require('crypto'),yaml=require('js-yaml');
+async function digest(file,algorithm){const hash=crypto.createHash(algorithm);for await(const chunk of fs.createReadStream(file))hash.update(chunk);return hash.digest(algorithm==='sha512'?'base64':'hex')}
+async function main(){
+  const version=process.argv[2],installer=process.argv[3];
+  if(!/^\d+\.\d+\.\d+$/.test(version||'')||!installer||!fs.existsSync(installer))throw Error('Usage: node scripts/publish-release.cjs VERSION INSTALLER');
+  const dir=path.dirname(installer),metadata=path.join(dir,'latest.yml'),blockmap=installer+'.blockmap';
+  const info=yaml.load(fs.readFileSync(metadata,'utf8'));
+  if(info.version!==version||info.path!==path.basename(installer)||info.sha512!==await digest(installer,'sha512')||!fs.existsSync(blockmap))throw Error('Release metadata / installer mismatch');
+  const cred=cp.execFileSync('git',['-c','credential.helper=','-c','credential.helper=manager','credential','fill'],{input:'protocol=https\nhost=github.com\n\n',encoding:'utf8',stdio:['pipe','pipe','pipe']});
+  const fields=Object.fromEntries(cred.trim().split('\n').map(l=>{const i=l.indexOf('=');return [l.slice(0,i),l.slice(i+1)]}));
+  if(!fields.password)throw Error('GitHub login unavailable');
+  const headers={Authorization:'Bearer '+fields.password,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'QuickNote-Release'},base='https://api.github.com/repos/Yfanx/QuickNote';
+  async function request(url,method='GET',body){const r=await fetch(url,{method,headers:{...headers,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error('GitHub API '+r.status);return r.status===204?null:r.json()}
+  const releases=await request(base+'/releases?per_page=100');let release=releases.find(r=>r.tag_name==='v'+version);
+  if(!release)release=await request(base+'/releases','POST',{tag_name:'v'+version,name:'QuickNote '+version,draft:true,prerelease:false,body:'安排日期顶部恢复 Today，底部只保留清除安排；待办窗口显示任务栏图标，快速记录保持隐藏。\n\n新增软件内更新：启动后后台检查，设置→关于可手动检查、下载与重启安装，保留任务和设置。4.3.x 及更早版本需先手动安装本版一次。\n\nWindows x64 安装包：QuickNote-Setup-'+version+'-x64.exe。latest.yml 与 blockmap 用于自动更新。'});
+  // Publish only after every asset is ready, so clients never see an incomplete update.
+  for(const file of [installer,blockmap,metadata]){
+    const name=path.basename(file),existing=release.assets.find(a=>a.name===name);
+    if(existing){if(existing.size!==fs.statSync(file).size||(existing.digest?.startsWith('sha256:')&&existing.digest!=='sha256:'+await digest(file,'sha256')))throw Error('Asset differs; refusing overwrite: '+name);continue}
+    const r=await fetch(release.upload_url.split('{')[0]+'?name='+encodeURIComponent(name),{method:'POST',headers:{...headers,'Content-Type':'application/octet-stream','Content-Length':String(fs.statSync(file).size)},body:await fs.openAsBlob(file)});
+    if(!r.ok)throw Error('Upload failed: '+name+' ('+r.status+')');console.log('Uploaded '+name);
+  }
+  if(release.draft)release=await request(base+'/releases/'+release.id,'PATCH',{draft:false,make_latest:'true'});
+  console.log(release.html_url);
+}
+main().catch(e=>{console.error(e.message);process.exitCode=1});

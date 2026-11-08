@@ -1,0 +1,24 @@
+const {app,BrowserWindow,dialog}=require('electron'),{EventEmitter}=require('events'),fs=require('fs'),path=require('path'),assert=require('assert'),Module=require('module');
+const dir=path.join(app.getPath('temp'),'qn-updates-ui-'+Date.now());fs.mkdirSync(dir,{recursive:true});app.setPath('userData',dir);
+fs.writeFileSync(path.join(dir,'notes.json'),JSON.stringify({notes:[{id:'keep',text:'保留的旧任务',created:1,done:false}],background:true,notificationsEnabled:false,shortcut:'Control+Alt+Shift+F7',tasksShortcut:'Control+Alt+Shift+F8'}));app.setLoginItemSettings=()=>{};
+const fake=new EventEmitter();fake.checkForUpdates=async()=>{fake.emit('checking-for-update');fake.emit('update-available',{version:'4.5.0'});return {}};fake.downloadUpdate=async()=>{fake.emit('download-progress',{percent:61});fake.emit('update-downloaded',{version:'4.5.0'})};fake.quitAndInstall=()=>{fake.installed=true};
+Object.defineProperty(app,'isPackaged',{get:()=>true});app.getVersion=()=>require('../package.json').version;const load=Module._load;Module._load=function(name,...args){return name==='electron-updater'?{autoUpdater:fake}:load.call(this,name,...args)};
+let skip=true;const setSkip=BrowserWindow.prototype.setSkipTaskbar;BrowserWindow.prototype.setSkipTaskbar=function(v){skip=v;return setSkip.call(this,v)};
+require('../electron/main.cjs');const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+app.whenReady().then(()=>setTimeout(async()=>{try{
+ const w=BrowserWindow.getAllWindows()[0],js=s=>w.webContents.executeJavaScript(s),call=(a,p)=>js(`window.quicknote.call(${JSON.stringify(a)},${JSON.stringify(p)??'null'})`);
+ await call('show','tasks');assert.equal(skip,false);await call('show','capture');assert.equal(skip,true);await call('show','tasks');await call('hide');await sleep(200);assert.equal(skip,true);
+ await call('show','capture');await js(`document.querySelector('[title="安排计划日期"]').click()`);
+ assert.equal(await js(`document.querySelector('.when-shortcuts button').textContent.trim()`),'Today 今天');
+ assert.equal(await js(`document.querySelectorAll('.date-popover>.date-chips').length`),0);
+ assert.equal(await js(`document.querySelector('.popover-clear').textContent`),'清除安排');
+ await js(`document.querySelector('.when-shortcuts button').click()`);assert((await call('get')).draftDates.dueDate);
+ await js(`document.querySelector('[title="安排计划日期"]').click()`);await js(`document.querySelector('.popover-clear').click()`);assert.equal((await call('get')).draftDates.dueDate,null);
+ await call('show','settings');await js(`Array.from(document.querySelectorAll('nav button')).find(b=>b.textContent==='关于').click()`);
+ await js(`document.querySelector('.update-card button').click()`);await sleep(120);assert.equal((await call('get')).update.status,'available');assert(await js(`!!document.querySelector('.update-indicator')`));
+ await js(`document.querySelector('.update-card button').click()`);await sleep(120);assert.equal((await call('get')).update.status,'downloaded');assert(!fake.installed);
+ fs.writeFileSync('docs/images/updates.png',(await w.capturePage()).toPNG());
+ dialog.showMessageBox=async()=>({response:0});await call('update-install');assert(!fake.installed);
+ dialog.showMessageBox=async()=>({response:1});await call('update-install');assert(fake.installed);assert.equal((await call('get')).notes[0].text,'保留的旧任务');
+ assert.equal(fake.autoInstallOnAppQuit,false);console.log('PASS taskbar visibility by view, Today text / one clear button, update UI download/install confirmation, preserved old data');
+}catch(e){console.error(e);process.exitCode=1}finally{for(const w of BrowserWindow.getAllWindows())w.destroy();app.exit(process.exitCode||0)}},1100));

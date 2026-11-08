@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.3.1**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.4.0**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -8,11 +8,12 @@ Windows 本地快速记录与时间待办工具。Electron + React + TypeScript 
 
 - Ctrl+Shift+Space 唤出快速记录，Ctrl+Shift+G 打开待办；再次按相同快捷键隐藏，旧配置保留。
 - Enter 保存、Shift+Enter 换行，输入法组合保护，草稿与日期选项本地保存。
-- 首页输入框右下角日历/旗帜打开 When 与 Deadline。When 支持今天、今晚、展开月历和Someday（以后再做，不设日期），Deadline 首页只选日期。
+- 首页输入框右下角日历/旗帜打开 When 与 Deadline。When 支持 Today、今晚、展开月历和Someday（以后再做，不设日期），Deadline 首页只选日期。
 - 首页移除数量标签与最近记录；待办分类为收件箱、今天、即将到来、任意时间、以后、日历、截止日期。即将到来涵盖所有未来日期；任意时间平铺汇总全部未完成任务，包含已安排日期及以后事项。
 - 待办底部 Enter 直接保存，默认继承当前分类日期；已有任务可打开详情编辑。
 - 计划日期与截止日期独立；时间轴、Deadline 与月历引用同一条任务。
 - 左侧 Deadline 集中查看未完成截止任务：移除顶部选项，按逾期与英文月份分组并横线分隔，右侧只显示 days left / days past。
+- 待办窗口显示品牌任务栏图标，快速记录和隐藏状态不显示。
 - 月历分别标记计划日期与截止日期，支持按日新建；当天日期使用粉色星标。
 - 编辑、复制、置顶、完成/删除、按钮与 Ctrl+Z 单层撤销。
 - 深色、浅色、跟随系统主题；托盘常驻、登录启动、实际快捷键状态。
@@ -29,7 +30,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.3.1，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.4.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -64,3 +65,21 @@ main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 �
 ![截止日期列表](docs/images/deadline-list.png)
 
 任务日期使用 Today / Tomorrow / 本周星期等摘要，完整日期可通过悬停或任务详情查看。Deadline 按本地自然日计算剩余及逾期天数，保留旧数据与高级时间设置；本次仅改变展示。跨年月份附年份。
+
+## 软件更新（4.4.0）
+
+安装版启动20秒后检查 GitHub Releases，之后每6小时检查。发现新版后在标题栏显示更新入口；通知开关开启且系统支持时，也会发送一次Windows提示。设置→关于可手动检查、下载、查看进度、重启安装。联网失败可重试；不自动下载、不在退出时静默安装，不上传任务内容。安装前刷新已持久化草稿，继续使用原有数据目录和appId。
+
+**4.3.x及更早版本需要手动安装4.4.0一次，之后才能在软件内更新。** 更新依赖公开GitHub可访问性，开发模式禁用联网检查。NSIS未配置数字证书。
+
+安排日期顶部快捷选项显示Today文字，只有月历当天数字使用星标；保留Someday，底部三枚按钮合并为单个清除安排。
+
+发布安装包时，先创建草稿Release，上传EXE、blockmap、latest.yml并校验后再公开，避免客户端读到不完整更新。执行：
+
+```powershell
+node scripts/publish-release.cjs 4.4.0 release/4.4.0/QuickNote-Setup-4.4.0-x64.exe
+# 发布后，真实GitHub源检查，不下载、不执行安装程序
+node_modules/.bin/electron tests/github-update-check.cjs
+```
+
+实现参照 [electron-builder v26 自动更新文档](https://www.electron.build/v26/docs/features/auto-update/)。

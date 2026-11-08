@@ -21,7 +21,7 @@ app.whenReady().then(()=>setTimeout(async()=>{try{
  assert((await js(`document.querySelector('[data-task="today"]').textContent`)).includes('Today'));
  await js(`document.querySelector('[data-task="future"] .check').click()`);await sleep(200);assert((await call('get')).notes.find(n=>n.id==='future').done);
  await nav('日历');assert.equal(await js(`document.querySelectorAll('.calendar-grid .today-star').length`),1);
- await call('show','capture');await js(`document.querySelector('[title="安排计划日期"]').click()`);assert.equal(await js(`document.querySelector('.when-shortcuts button .today-star').getAttribute('aria-label')`),'Today');
+ await call('show','capture');await js(`document.querySelector('[title="安排计划日期"]').click()`);assert.equal(await js(`document.querySelector('.when-shortcuts button').textContent.trim().split(' ')[0]`),'Today');
  await js(`document.querySelector('.expand-calendar').click()`);assert.equal(await js(`document.querySelectorAll('.when-month .today-star').length`),1);
  assert.equal(await js(`document.querySelector('.when-month .today-star').closest('button').dataset.date`),localDay(now));
  await js(`document.querySelector('.when-month .today-star').click()`);assert.equal((await call('get')).draftDates.dueDate,localDay(now));

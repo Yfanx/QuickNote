@@ -1,20 +1,20 @@
 {
   "name": "quicknote",
-  "version": "4.3.1",
+  "version": "4.4.0",
   "description": "Keyboard-driven local quick capture",
   "author": "QuickNote",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron . --dev\"",
     "build": "tsc --noEmit && vite build",
-    "dist": "npm run build && electron-builder --win nsis",
+    "dist": "npm run build && electron-builder --win nsis --publish never",
     "test": "node tests/run.cjs"
   },
   "build": {
     "appId": "local.quicknote.desktop",
     "productName": "QuickNote",
     "directories": {
-      "output": "release/4.3.1"
+      "output": "release/4.4.0"
     },
     "files": [
       "dist/**/*",
@@ -27,7 +27,8 @@
       "assets/icons/**/*",
       "assets/THIRD_PARTY_NOTICES.txt",
       "electron/time.cjs",
-      "electron/reminders.cjs"
+      "electron/reminders.cjs",
+      "electron/updates.cjs"
     ],
     "win": {
       "target": "nsis",
@@ -40,9 +41,17 @@
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "assets/app.ico",
       "uninstallerIcon": "assets/app.ico"
-    }
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Yfanx",
+      "repo": "QuickNote",
+      "releaseType": "release"
+    },
+    "artifactName": "QuickNote-Setup-${version}-${arch}.${ext}"
   },
   "dependencies": {
+    "electron-updater": "^6.8.11",
     "framer-motion": "^14.10.1",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
