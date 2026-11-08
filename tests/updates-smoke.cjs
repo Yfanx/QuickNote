@@ -17,7 +17,6 @@ app.whenReady().then(()=>setTimeout(async()=>{try{
  await call('show','settings');await js(`Array.from(document.querySelectorAll('nav button')).find(b=>b.textContent==='关于').click()`);
  await js(`document.querySelector('.update-card button').click()`);await sleep(120);assert.equal((await call('get')).update.status,'available');assert(await js(`!!document.querySelector('.update-indicator')`));
  await js(`document.querySelector('.update-card button').click()`);await sleep(120);assert.equal((await call('get')).update.status,'downloaded');assert(!fake.installed);
- fs.writeFileSync('docs/images/updates.png',(await w.capturePage()).toPNG());
  dialog.showMessageBox=async()=>({response:0});await call('update-install');assert(!fake.installed);
  dialog.showMessageBox=async()=>({response:1});await call('update-install');assert(fake.installed);assert.equal((await call('get')).notes[0].text,'保留的旧任务');
  assert.equal(fake.autoInstallOnAppQuit,false);console.log('PASS taskbar visibility by view, Today text / one clear button, update UI download/install confirmation, preserved old data');

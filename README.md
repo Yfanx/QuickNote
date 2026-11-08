@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.5.0**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.6.0**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -30,7 +30,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.5.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.6.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -77,7 +77,7 @@ main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 �
 发布安装包时，先创建草稿Release，上传EXE、blockmap、latest.yml并校验后再公开，避免客户端读到不完整更新。执行：
 
 ```powershell
-node scripts/publish-release.cjs 4.4.0 release/4.4.0/QuickNote-Setup-4.4.0-x64.exe
+node scripts/publish-release.cjs 4.6.0 release/4.6.0/QuickNote-Setup-4.6.0-x64.exe
 # 发布后，真实GitHub源检查，不下载、不执行安装程序
 node_modules/.bin/electron tests/github-update-check.cjs
 ```
@@ -99,3 +99,13 @@ node_modules/.bin/electron tests/github-update-check.cjs
 Today/This evening及分类默认的今天、即将到来按相对日期处理。午夜、唤醒、解锁、重新唤出时刷新，提交前再次计算；月历明确选定的日期、旧版无相对标记草稿和已有任务不会自动改日期。原本“今天”列表保存后重开丢失默认日期的问题一并修复。
 
 真实Windows验收使用独立appId与独立示例数据，实际完成NSIS旧版安装→新版覆盖→记录及设置保留、启动项注册/关闭、后台参数启动、100%/125%/150%/200%进程DPI检查。含空格路径的启动命令已修复为带引号路径。仅有一块物理显示器，多屏负坐标使用模拟拓扑；未重启或休眠当前电脑。详见[Windows验收](docs/WINDOWS_ACCEPTANCE.md)。
+
+## 更新界面与下载控制（4.6.0）
+
+关于页使用紧凑品牌行和更新卡片，显示目标版本、发布日期、简短更新内容。下载时显示百分比、已下载/总大小和速度，可取消传输；取消后可重新下载，下载失败可直接重试。检查失败提供重新检查，安装仍需确认。更新内容按纯文本显示，不执行远程HTML。
+
+![下载中](docs/images/update-downloading.png)
+
+更新库的取消令牌同时绑定实际HTTP请求，包含重定向后的请求，避免界面取消但后台继续下载。取消完成前不启动新下载，下载完成与取消竞态不误报。缓存完整包可复用，但不承诺断点续传。
+
+截图为隔离测试中的4.7.0示例，不代表已发布4.7.0。软件正常情况下显示GitHub真实版本和更新内容。
