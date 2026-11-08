@@ -1,9 +1,9 @@
-# QuickNote 4.4.0 回归测试
+# QuickNote 4.4.1 回归测试
 
 日期：2026-11-08。构建：npm run build。回归：npm test。全部使用独立临时 userData，不修改真实记录。
 
 - 13 项 Node 单元测试：旧数据迁移、草稿/原子存储、备份保留及恢复校验、计划/截止独立、截止时刻边界、提醒去重、本地日期跨周跨年、日期摘要、月份分组、自然日倒计时、任意时间汇总。
-- 11 组 Electron 实际运行检查：updates-feed、updates-ui、deadline-simple、date-labels、when、features、schedule、deadline、popover、restore4、check-menu。
+- 12 组 Electron 实际运行检查：default-view、updates-feed、updates-ui、deadline-simple、date-labels、when、features、schedule、deadline、popover、restore4、check-menu。
 - 新版检查：Deadline 无顶部搜索/筛选/排序，逾期置首、月份横线分组、右侧倒计时、无重复日期元信息；任意时间平铺显示全部未完成任务（包括以后和已有计划）；Today 星标出现在日期选择/月历，选中后仍写入正确日期；完成后排除并保留原记录。
 - 原有检查：快速记录/连续输入、组合输入保护、草稿/自定义占位文字持久化、右下角日期浮层和左侧标签、分类默认日期、全局快捷键注册与回调切换、焦点、Esc/失焦、三主题、搜索、复制、置顶、编辑、完成/删除撤销、导入导出与确认恢复、托盘菜单图标。
 - 新增的窗口测试显式销毁测试窗口后退出，避免收尾阶段的窗口关闭拦截影响后续测试；输入测试等待 React 接收文本后再发送 Enter。
@@ -26,3 +26,11 @@
 ![更新界面示例](images/updates.png)
 
 发布后公开 GitHub 更新源实测通过：按4.3.1版本身份读取打包配置，识别4.4.0及正确安装包和SHA512元数据；未执行覆盖安装。
+
+4.4.1文案清理：TypeScript/Vite构建、现有日期标签/占位文字及更新界面Electron检查；未改任务结构、更新逻辑或许可证文件。
+
+4.4.1新增默认打开选项：持久化、旧数据兼容、托盘点击/重复启动与明确入口独立测试。
+
+默认页面回归及完整测试通过：13项单元测试、12组Electron检查。修复显示后立即退出时延迟焦点回调访问已销毁窗口的问题。
+
+![默认打开](images/behavior.png)

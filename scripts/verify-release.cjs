@@ -2,7 +2,7 @@ const fs=require('fs'),path=require('path'),crypto=require('crypto'),assert=requ
 async function main(){
  const version=require('../package.json').version,dir=path.join(__dirname,'../release',version),archive=path.join(dir,'win-unpacked/resources/app.asar');
  assert.equal(JSON.parse(asar.extractFile(archive,'package.json')).version,version);
- for(const file of ['main.cjs','updates.cjs','preload.cjs'])assert(asar.extractFile(archive,'electron/'+file).equals(fs.readFileSync(path.join(__dirname,'../electron',file))),file+' differs from source');
+ for(const file of ['main.cjs','updates.cjs','preload.cjs','store.cjs'])assert(asar.extractFile(archive,'electron/'+file).equals(fs.readFileSync(path.join(__dirname,'../electron',file))),file+' differs from source');
  assert(asar.extractFile(archive,path.join('node_modules','electron-updater','out','main.js')).length>0);
  const config=yaml.load(fs.readFileSync(path.join(dir,'win-unpacked/resources/app-update.yml'),'utf8'));
  assert.equal(config.provider,'github');assert.equal(config.owner,'Yfanx');assert.equal(config.repo,'QuickNote');

@@ -1,6 +1,6 @@
 {
   "name": "quicknote",
-  "version": "4.4.0",
+  "version": "4.4.1",
   "description": "Keyboard-driven local quick capture",
   "author": "QuickNote",
   "main": "electron/main.cjs",
@@ -14,7 +14,7 @@
     "appId": "local.quicknote.desktop",
     "productName": "QuickNote",
     "directories": {
-      "output": "release/4.4.0"
+      "output": "release/4.4.1"
     },
     "files": [
       "dist/**/*",
