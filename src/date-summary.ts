@@ -1,0 +1,3 @@
+import{day,tomorrow,weekEnd}from'./timeline';
+export function dateSummary(value:string,now=new Date()){if(value===day(now))return 'Today';if(value===tomorrow(now))return 'Tomorrow';const d=new Date(value+'T12:00:00'),weekday=d.toLocaleDateString('zh-CN',{weekday:'short'});if(value>=day(now)&&value<=weekEnd(now))return weekday;return `${weekday}, ${d.toLocaleDateString('en-US',{month:'short'})} ${d.getDate()}`}
+export function daysLeft(value:string,now=new Date()){const [y,m,d]=value.split('-').map(Number),diff=Math.round((Date.UTC(y,m-1,d)-Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);return diff<0?`${-diff} ${diff===-1?'day':'days'} overdue`:`${diff} ${diff===1?'day':'days'} left`}

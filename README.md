@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.2.1**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.3.0**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -29,7 +29,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.2.1，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.3.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -52,6 +52,9 @@ node_modules/.bin/electron tests/schedule-smoke.cjs
 
 ## 版本管理
 
-main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 为 Git 初始基线，4.2.1 为紧凑日期浮层与旗帜统一。远端：https://github.com/Yfanx/QuickNote 。
+main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 为 Git 初始基线，4.3.0 为紧凑日期浮层与旗帜统一。远端：https://github.com/Yfanx/QuickNote 。
 
 全功能自动化回归：npm test。范围与未实机验收项见 [测试报告](docs/TEST_REPORT.md)。
+
+## 日期标签与输入设置
+选择计划或截止日期后，标签动态移到输入框左下角，对应右侧图标淡出。日期显示 Today / Tomorrow / 本周星期 / 跨周星期与英文月份缩写；截止日期附自然日剩余天数，逾期显示 overdue。点击左侧标签可修改或清除。待办底部与主页相同，Enter 直接保存，无加号；保留所在分类/日历默认日期。设置→外观可修改快速记录占位文字，离开输入框即保存，主页与待办同步。GitHub Release 提供 Windows 安装包下载。
