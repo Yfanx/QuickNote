@@ -1,8 +1,25 @@
-# QuickNote 4.0
+# QuickNote
 
-Windows 本地 Quick Capture + 时间轴待办。基于原项目升级，用户 public 粉色小龙素材已接入，无账号和云同步。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.1.2**。
 
-## 运行
+![Quick Capture](QuickNote功能说明_配图/4.1-4.1.2-紧凑主页.png)
+
+## 使用
+
+- Ctrl+Shift+Space 唤出快速记录，Ctrl+Shift+G 打开待办；再次按相同快捷键隐藏，旧配置保留。
+- Enter 保存、Shift+Enter 换行，输入法组合保护，草稿与日期选项本地保存。
+- 主页“安排 / 截止”点击打开浮层，选择后自动收起；时间与提醒位于“更多选项”。
+- 待办 Enter 或加号打开完整任务详情，默认继承当前分类日期。
+- 计划日期与截止日期独立；时间轴、Deadline 与月历引用同一条任务。
+- 左侧 Deadline 集中查看截止任务，支持紧急程度分组、范围筛选、搜索和排序。
+- 月历分别标记计划日期与截止日期，支持按日新建。
+- 编辑、复制、置顶、完成/删除、按钮与 Ctrl+Z 单层撤销。
+- 深色、浅色、跟随系统主题；托盘常驻、登录启动、实际快捷键状态。
+- 应用运行时提供 Windows 提醒，退出后不提醒；系统通知实际显示受 Windows 设置影响。
+
+![Deadline picker](QuickNote功能说明_配图/4.1-4.1.2-截止浮层.png)
+
+## 开发与打包
 
 ```powershell
 npm install
@@ -11,53 +28,27 @@ npm run build
 npm run dist
 ```
 
-默认 Ctrl+Shift+Space 快速记录、Ctrl+Shift+G 待办，再次按同一快捷键隐藏。Esc / 失焦隐藏。旧自定义快捷键保留，拒绝 Alt+Space。开机启动后台运行。
+NSIS 输出 release/4.1.2，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
-## 功能
+## 本地数据
 
-- 统一石墨与柔粉深浅/系统主题；快速记录、时间轴、分组设置、原生托盘。
-- 350ms 草稿防抖，隐藏刷新，重启恢复；成功提交与草稿清除原子写入。
-- 最近三条记录、连续输入、IME 组合保护、防重复提交。
-- 收件箱/今天（含逾期）/明天/本周/以后/已完成，本地日期；周日为本周结束。
-- 计划日期、分组内置顶、编辑复制删除搜索、完成与可点击撤销，Ctrl+Z 单层快照。
-- 每日最多一份自动备份、保留七份；导入合并、确认恢复、版本校验、恢复前备份。
-- 真实全局快捷键注册状态与重新注册；设置即时生效。
+沿用 Electron userData 下 notes.json，通常 %APPDATA%/quicknote，可在设置定位。dataVersion5，旧 dueDate 保留为计划日期，deadlineDate/deadlineTime/reminderAt 独立。旧备忘录和分类不删除。临时文件 + fsync + 重命名，滚动 .bak、升级 .pre5-backup、导入/恢复前备份；每日最多一份快照，保留最近七份。恢复有结构校验和确认。
 
-## 数据
+## 验证
 
-沿用 Electron userData 下 notes.json（通常 %APPDATA%/quicknote）。Store 层统一处理，保留旧字段与记录。升级备份 .pre4-backup，滚动备份 .bak，导入/恢复前分别 .before-import/.before-restore。每日 backups/YYYY-MM-DD.json。先写临时文件/fsync 再重命名；主/备份均损坏则提示并保留原文件。无数据库清空。
+```powershell
+node --test electron/deadline.test.cjs electron/reminders.test.cjs electron/store.test.cjs
+node_modules/.bin/electron electron/popover-smoke.cjs
+node_modules/.bin/electron electron/deadline-smoke.cjs
+node_modules/.bin/electron electron/schedule-smoke.cjs
+```
 
-恢复会替换任务、设置、草稿，导入只合并任务；确认前显示数量。备份失败在设置数据页提示。
+运行测试使用独立临时目录，不修改真实记录。真实 Windows 通知、输入法、多显示器/高 DPI、开机登录及安装流程仍需人工验收。
 
-## 图标与许可
+## 文档与资源
 
-用户素材位于 public，品牌整理在 assets/mascot；assets/app/app.svg 含嵌入 PNG；assets/tray/tray.svg 为头像矢量；assets/icons 为统一 Lucide SVG/PNG。PNG/ICO 有 16/24/32/48/64/128/256 尺寸。运行 node assets/build4.cjs 重建。个人非官方二创素材，请按用户素材授权范围使用。依赖文本见 THIRD_PARTY_NOTICES.md 与设置“关于”。
+[完整功能说明](QuickNote-功能全览.md)。assets 包含用户提供的粉色小龙品牌素材、SVG 操作图标和多尺寸 ICO。原素材及其来源说明保留；依赖许可证见 THIRD_PARTY_NOTICES.md。
 
-## 测试
+## 版本管理
 
-node --test electron/store.test.cjs
-node_modules/.bin/electron electron/smoke4.cjs
-node_modules/.bin/electron electron/smoke4.cjs --restart
-
-实际使用独立临时目录，测试草稿/提交、旧数据、备份/恢复验证、日期跨年跨周、撤销完整元数据、快捷键回调与注册状态。electron/screenshots4.cjs 生成桌面配图。真实输入法、多屏/高 DPI、开机登录和安装流程仍需人工验收；当前背景采用高不透明度回退，未启用 Acrylic。
-
-## 交付
-
-安装包 release/4.0.0/QuickNote Setup 4.0.0.exe，免安装目录 win-unpacked 需完整保留。未签名。完整使用文档：QuickNote-功能全览.md（桌面副本已同步）。旧源码 .pre4 为本次重构前快照，不参与打包。
-
-## 浅色优化 4.0.1
-暖白窗口和淡粉侧栏，修正旧版灰色叠层，统一浅色卡片/搜索/输入/勾选/Toast。应用标题栏、关于页和原生窗口图标随主题切换。浅色图标 assets/app/app-light.svg、assets/app-light.ico、assets/app-light-*.png，执行 node assets/build-light.cjs 重建。4.0.1 安装包位于 release/4.0.1；浅色实机截图已同步桌面文档。
-
-
-4.0.2：统一托盘菜单行和图标列，开机启动以状态文字代替 checkbox。安装包 release/4.0.2。
-
-4.0.3：修复时间分类新增不继承日期，今天/明天/本周/以后默认按当前视图安排，编辑保留日期。Electron electron/schedule-smoke.cjs 已验证五个视图实际输入保存。
-
-## 4.1.0 Deadline 与日历
-旧 dueDate 仍为计划日期，新增截止日期/可选时间/绝对提醒时间戳，dataVersion5，升级前 .pre5-backup。时间轴新增逾期待安排，未来任务按具体日期分组；Deadline 智能视图与月历引用同一条记录。统一编辑面板，首页快捷安排，日期草稿。应用运行时 Windows 通知，退出不发送，恢复后补发待触发提醒并持久化去重。
-
-测试：node --test electron/deadline.test.cjs electron/reminders.test.cjs electron/store.test.cjs；Electron electron/deadline-smoke.cjs、electron/schedule-smoke.cjs。截图 electron/deadline-screenshots.cjs。测试目录隔离，未改写用户数据。真实通知、输入法、多屏与开机流程需人工验收。
-
-安装包 release/4.1.0/QuickNote Setup 4.1.0.exe，完整说明及截图已同步桌面功能文档。
-
-4.1.1：统一 Deadline 小龙图标与深浅色日期控件/细滚动条，主页只保留一层滚动。待办 Enter 或加号打开完整新建面板，继承当前分类日期，确认保存后创建；主页仍直接保存。安装包 release/4.1.1。
+main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 为 Git 初始基线，4.1.2 为紧凑日期浮层与旗帜统一。远端：https://github.com/Yfanx/QuickNote 。

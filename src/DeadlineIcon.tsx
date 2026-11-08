@@ -1,2 +1,2 @@
-import React from 'react';
-export function DeadlineIcon(){return <img className="deadline-icon" src="./brand/deadline.png" alt="" aria-hidden="true"/>}
+import React from 'react';import{Flag}from'lucide-react';
+export function DeadlineIcon(){return <Flag className="deadline-icon" aria-hidden="true"/>}
