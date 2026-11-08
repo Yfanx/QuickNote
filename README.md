@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.1.2**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.2.0**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -8,7 +8,8 @@ Windows 本地快速记录与时间待办工具。Electron + React + TypeScript 
 
 - Ctrl+Shift+Space 唤出快速记录，Ctrl+Shift+G 打开待办；再次按相同快捷键隐藏，旧配置保留。
 - Enter 保存、Shift+Enter 换行，输入法组合保护，草稿与日期选项本地保存。
-- 主页“安排 / 截止”点击打开浮层，选择后自动收起；时间与提醒位于“更多选项”。
+- 首页输入框右下角日历/旗帜打开 When 与 Deadline。When 支持今天、今晚、展开月历和下一个周日，Deadline 首页只选日期。
+- 首页移除数量标签与最近记录；待办分类为收件箱、今天、即将到来、任意时间、以后、日历、截止日期。即将到来涵盖所有未来日期。
 - 待办 Enter 或加号打开完整任务详情，默认继承当前分类日期。
 - 计划日期与截止日期独立；时间轴、Deadline 与月历引用同一条任务。
 - 左侧 Deadline 集中查看截止任务，支持紧急程度分组、范围筛选、搜索和排序。
@@ -28,7 +29,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.1.2，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.2.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -51,4 +52,6 @@ node_modules/.bin/electron tests/schedule-smoke.cjs
 
 ## 版本管理
 
-main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 为 Git 初始基线，4.1.2 为紧凑日期浮层与旗帜统一。远端：https://github.com/Yfanx/QuickNote 。
+main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 为 Git 初始基线，4.2.0 为紧凑日期浮层与旗帜统一。远端：https://github.com/Yfanx/QuickNote 。
+
+全功能自动化回归：npm test。范围与未实机验收项见 [测试报告](docs/TEST_REPORT.md)。

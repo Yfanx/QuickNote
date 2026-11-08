@@ -1,19 +1,20 @@
 {
   "name": "quicknote",
-  "version": "4.1.2",
+  "version": "4.2.0",
   "description": "Keyboard-driven local quick capture",
   "author": "QuickNote",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron . --dev\"",
     "build": "tsc --noEmit && vite build",
-    "dist": "npm run build && electron-builder --win nsis"
+    "dist": "npm run build && electron-builder --win nsis",
+    "test": "node tests/run.cjs"
   },
   "build": {
     "appId": "local.quicknote.desktop",
     "productName": "QuickNote",
     "directories": {
-      "output": "release/4.1.2"
+      "output": "release/4.2.0"
     },
     "files": [
       "dist/**/*",
