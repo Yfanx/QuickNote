@@ -1,0 +1,8 @@
+﻿import{Note,day,tomorrow,weekEnd}from'./timeline';
+export const shift=(offset:number,now=new Date())=>{const d=new Date(now);d.setDate(d.getDate()+offset);return day(d)};
+export function deadlineAt(n:Note){if(!n.deadlineDate)return null;if(n.deadlineTime)return new Date(n.deadlineDate+'T'+n.deadlineTime+':00').getTime();const d=new Date(n.deadlineDate+'T00:00:00');d.setDate(d.getDate()+1);return d.getTime()-1}
+export function urgency(n:Note,now=new Date(),horizon=3){if(!n.deadlineDate)return '';if(n.done)return '已完成的截止任务';if(now.getTime()>(deadlineAt(n)??Infinity))return '已逾期';if(n.deadlineDate===day(now))return '今天截止';return n.deadlineDate<=shift(horizon,now)?'即将截止':'稍后截止'}
+export function planGroup(n:Note,now=new Date()){if(n.done)return '已完成';if(!n.dueDate)return n.schedule==='later'?'以后':'收件箱';if(n.dueDate<day(now))return '逾期待安排';if(n.dueDate===day(now))return '今天';if(n.dueDate===tomorrow(now))return '明天';return n.dueDate<=weekEnd(now)?'本周剩余':'即将到来'}
+export function inView(n:Note,view:string,now=new Date()){if(view==='Deadline')return !!n.deadlineDate;if(view==='已完成')return n.done;if(n.done)return false;if(view==='全部')return true;if(view==='本周')return !!n.dueDate&&n.dueDate>=day(now)&&n.dueDate<=weekEnd(now);return planGroup(n,now)===view}
+export const ddlSort=(a:Note,b:Note)=>(a.deadlineDate||'9999').localeCompare(b.deadlineDate||'9999')||Number(!!b.isPinned)-Number(!!a.isPinned)||((deadlineAt(a)??Infinity)-(deadlineAt(b)??Infinity))||(a.dueDate||'9999').localeCompare(b.dueDate||'9999')||b.created-a.created||a.id.localeCompare(b.id);
+

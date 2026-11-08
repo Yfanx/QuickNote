@@ -1,0 +1,8 @@
+const {Notification}=require('electron');
+class Reminders{
+constructor(store,open){this.store=store;this.open=open;this.timer=null;this.live=new Map();this.stopped=false}
+schedule(){for(const [id,entry]of this.live){const n=this.store.data.notes.find(n=>n.id===id);if(!n||n.done||n.reminderAt!==entry.at||!this.store.data.notificationsEnabled){entry.notice.close();this.live.delete(id)}}clearTimeout(this.timer);if(this.stopped||!this.store.data.notificationsEnabled)return;const pending=this.store.data.notes.filter(n=>!n.done&&Number.isFinite(n.reminderAt)&&n.reminderNotifiedAt!==n.reminderAt);if(!pending.length)return;const next=Math.min(...pending.map(n=>n.reminderAt));this.timer=setTimeout(()=>this.fire(),Math.min(60000,Math.max(100,next-Date.now())))}
+fire(){try{if(!Notification.isSupported())throw Error('系统通知不可用，请检查 Windows 通知设置');const due=this.store.data.notes.filter(n=>!n.done&&Number.isFinite(n.reminderAt)&&n.reminderAt<=Date.now()&&n.reminderNotifiedAt!==n.reminderAt);for(const n of due){const notice=new Notification({title:'QuickNote · 任务提醒',body:n.text});notice.on('click',()=>this.open(n.id));notice.on('failed',(_,error)=>{this.store.warning='提醒发送失败：'+error});this.live.set(n.id,{notice,at:n.reminderAt});notice.on('close',()=>this.live.delete(n.id));notice.show();this.store.patch({notes:this.store.data.notes.map(x=>x.id===n.id?{...x,reminderNotifiedAt:n.reminderAt}:x)})}this.schedule()}catch(e){this.store.warning='提醒发送失败：'+e.message;clearTimeout(this.timer);if(!this.stopped)this.timer=setTimeout(()=>this.schedule(),60000)}}
+stop(){this.stopped=true;clearTimeout(this.timer);for(const {notice}of this.live.values())notice.close();this.live.clear()}
+}
+module.exports={Reminders};

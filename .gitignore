@@ -1,0 +1,10 @@
+node_modules/
+dist/
+release/
+*.pre3
+*.pre4
+*.pre-deadline
+.ai_context.md
+.env
+.env.*
+*.log
