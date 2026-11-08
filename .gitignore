@@ -31,3 +31,5 @@ release/
 /public/brand/exit.png
 /public/brand/restore.png
 /public/brand/startup.png
+
+/.qa/

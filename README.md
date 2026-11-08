@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.4.2**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.5.0**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -30,7 +30,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.4.2，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.5.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -91,3 +91,11 @@ node_modules/.bin/electron tests/github-update-check.cjs
 ![默认打开设置](docs/images/behavior.png)
 
 4.4.2：修复开机启动开关回弹。注册和读取使用同一可执行路径及--background参数，核对Windows启用状态；设置和托盘同步，其他偏好修改不重复改写启动项。
+
+## 浏览位置与日期刷新（4.5.0）
+
+待办记住上次分类、每个分类的滚动位置、日历月份与选中日期，重新打开或重启后恢复。状态保存在原本地配置文件中，不另建任务库；搜索结果的临时滚动不覆盖分类位置。
+
+Today/This evening及分类默认的今天、即将到来按相对日期处理。午夜、唤醒、解锁、重新唤出时刷新，提交前再次计算；月历明确选定的日期、旧版无相对标记草稿和已有任务不会自动改日期。原本“今天”列表保存后重开丢失默认日期的问题一并修复。
+
+真实Windows验收使用独立appId与独立示例数据，实际完成NSIS旧版安装→新版覆盖→记录及设置保留、启动项注册/关闭、后台参数启动、100%/125%/150%/200%进程DPI检查。含空格路径的启动命令已修复为带引号路径。仅有一块物理显示器，多屏负坐标使用模拟拓扑；未重启或休眠当前电脑。详见[Windows验收](docs/WINDOWS_ACCEPTANCE.md)。

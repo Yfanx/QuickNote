@@ -1,5 +1,5 @@
 function createStartup(app,executable=process.execPath){
-  const options=()=>({path:executable,args:['--background']});
+  const options=()=>({path:/\s/.test(executable)&&!executable.startsWith('"')?'"'+executable+'"':executable,args:['--background']});
   function read(){const state=app.getLoginItemSettings(options());return !!state.openAtLogin&&state.executableWillLaunchAtLogin!==false}
   function set(enabled){
     if(typeof enabled!=='boolean')throw Error('开机启动设置无效');

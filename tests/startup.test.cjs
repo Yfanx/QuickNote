@@ -7,3 +7,7 @@ test('startup reads the exact path and background args used to register',()=>{
 test('startup reports Windows write/readback failure rather than claiming success',()=>{
  const app={getLoginItemSettings:()=>({openAtLogin:false}),setLoginItemSettings(){}};assert.throws(()=>createStartup(app).set(true),/未生效/);assert.throws(()=>createStartup(app).set('true'),/无效/);
 });
+test('startup quotes executable paths containing spaces consistently',()=>{
+ let entry;const app={setLoginItemSettings:o=>{entry=o},getLoginItemSettings:o=>({openAtLogin:entry?.openAtLogin&&entry.path===o.path&&JSON.stringify(entry.args)===JSON.stringify(o.args)})};
+ const startup=createStartup(app,'C:/Program Files/QuickNote/QuickNote.exe');startup.set(true);assert.equal(entry.path,'"C:/Program Files/QuickNote/QuickNote.exe"');assert(startup.read());startup.set(false);assert(!startup.read());
+});

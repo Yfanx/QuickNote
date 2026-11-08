@@ -1,0 +1,21 @@
+const {app,BrowserWindow,powerMonitor}=require('electron'),fs=require('fs'),path=require('path'),assert=require('assert');
+const dir=path.join(app.getPath('temp'),'qn-stability-'+Date.now());fs.mkdirSync(dir,{recursive:true});app.setPath('userData',dir);app.setLoginItemSettings=()=>{};
+const notes=Array.from({length:70},(_,i)=>({id:'n'+i,text:'保留任务 '+i,created:i+1,done:false,deadlineDate:'2026-12-31'}));
+fs.writeFileSync(path.join(dir,'notes.json'),JSON.stringify({notes,background:true,notificationsEnabled:false,hideOnBlur:false,shortcut:'Control+Alt+Shift+F7',tasksShortcut:'Control+Alt+Shift+F8'}));require('../electron/main.cjs');const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+app.whenReady().then(()=>setTimeout(async()=>{try{
+ const w=BrowserWindow.getAllWindows()[0],js=s=>w.webContents.executeJavaScript(s).catch(e=>{throw Error(s+String(e))}),call=(a,p)=>js(`window.quicknote.call(${JSON.stringify(a)},${JSON.stringify(p)??'null'})`),nav=async name=>{await js(`Array.from(document.querySelectorAll('nav button')).find(b=>b.textContent.startsWith(${JSON.stringify(name)})).click()`);await sleep(150)};
+ await call('show','tasks');await nav('任意时间');await js(`const list=document.querySelector('.list');list.scrollTop=620;list.dispatchEvent(new Event('scroll'))`);await sleep(750);assert((await call('get')).workspace.scroll['任意时间']>=600);
+ await call('show','capture');await call('show','tasks');await sleep(200);assert.equal(await js(`document.querySelector('nav .selected').textContent.startsWith('任意时间')`),true);assert(await js(`document.querySelector('.list').scrollTop>=600`));
+ await nav('截止日期');await js(`document.querySelector('.list').scrollTop=300;document.querySelector('.list').dispatchEvent(new Event('scroll'))`);await sleep(750);await nav('任意时间');assert(await js(`document.querySelector('.list').scrollTop>=600`));
+ // Reload the renderer to exercise hydration from main-process persisted configuration.
+ w.reload();await new Promise(r=>w.webContents.once('did-finish-load',r));await sleep(250);assert(await js(`document.querySelector('.list').scrollTop>=600`));
+ await js(`globalThis.__qaDate=new Date(2026,11,31,23,59).getTime();globalThis.__NativeDate=Date;globalThis.Date=class extends __NativeDate{constructor(...args){super(...(args.length?args:[globalThis.__qaDate]))}static now(){return globalThis.__qaDate}};void 0`);
+ await nav('今天');assert.equal((await call('get')).draftDates.dueDate,'2026-12-31');await js(`globalThis.__qaDate=new __NativeDate(2027,0,1,0,1).getTime()`);powerMonitor.emit('resume');await sleep(200);assert.equal((await call('get')).draftDates.dueDate,'2027-01-01');
+ await js(`document.querySelector('.composer textarea').focus()`);w.webContents.insertText('跨年新增');await sleep(100);w.webContents.sendInputEvent({type:'keyDown',keyCode:'Return'});await sleep(180);assert.equal((await call('get')).notes.find(n=>n.text==='跨年新增').dueDate,'2027-01-01');
+ await call('hide');await sleep(170);await call('show','tasks');await sleep(100);assert((await js(`document.querySelector('.selected-dates').textContent`)).includes('Today'));
+ await js(`document.querySelector('[title="安排计划日期"]').click()`);await js(`document.querySelector('.expand-calendar').click()`);await js(`document.querySelector('[data-date="2027-01-15"]').click()`);await js(`globalThis.__qaDate=new __NativeDate(2027,0,20).getTime()`);powerMonitor.emit('unlock-screen');await sleep(200);assert.equal((await call('get')).draftDates.dueDate,'2027-01-15');
+ await nav('日历');await js(`document.querySelector('[title="下个月"]').click()`);await js(`document.querySelector('.calendar-grid button').click()`);const calendar=(await call('get')).workspace;
+ await call('show','capture');await call('show','tasks');await sleep(180);assert.equal((await call('get')).workspace.month,calendar.month);assert((await js(`document.querySelector('.calendar-day-title').textContent`)).includes(calendar.calendarDate));
+ assert.equal((await call('get')).notes.find(n=>n.id==='n0').deadlineDate,'2026-12-31');
+ console.log('PASS per-category scroll / view reload restoration, resume/year rollover, fixed date protection, inherited Today after hide, original records preserved');
+}catch(e){console.error(e);process.exitCode=1}finally{for(const w of BrowserWindow.getAllWindows())w.destroy();app.exit(process.exitCode||0)}},1100));
