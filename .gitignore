@@ -8,3 +8,26 @@ release/
 .env
 .env.*
 *.log
+
+# Personal documentation, design references and local captures
+/QuickNote-功能全览.md
+/QuickNote功能说明_配图/
+/smoke*.png
+/public/ChatGPT*
+/public/QuickNote*
+/assets/mascot/
+/assets/PROMPTS.md
+/assets/app-generated.png
+/assets/tray-generated.png
+/assets/build-icons.cjs
+/electron/*test.cjs
+/electron/*smoke*.cjs
+/electron/*screenshots*.cjs
+/electron/restore4.cjs
+/electron/check-menu.cjs
+/clean-repository.cjs
+
+/public/brand/capture.png
+/public/brand/exit.png
+/public/brand/restore.png
+/public/brand/startup.png

@@ -2,7 +2,7 @@
 
 Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.1.2**。
 
-![Quick Capture](QuickNote功能说明_配图/4.1-4.1.2-紧凑主页.png)
+![Quick Capture](docs/images/capture.png)
 
 ## 使用
 
@@ -17,7 +17,7 @@ Windows 本地快速记录与时间待办工具。Electron + React + TypeScript 
 - 深色、浅色、跟随系统主题；托盘常驻、登录启动、实际快捷键状态。
 - 应用运行时提供 Windows 提醒，退出后不提醒；系统通知实际显示受 Windows 设置影响。
 
-![Deadline picker](QuickNote功能说明_配图/4.1-4.1.2-截止浮层.png)
+![Deadline picker](docs/images/deadline-picker.png)
 
 ## 开发与打包
 
@@ -37,17 +37,17 @@ NSIS 输出 release/4.1.2，安装包与 node_modules/dist 均不提交 Git。�
 ## 验证
 
 ```powershell
-node --test electron/deadline.test.cjs electron/reminders.test.cjs electron/store.test.cjs
-node_modules/.bin/electron electron/popover-smoke.cjs
-node_modules/.bin/electron electron/deadline-smoke.cjs
-node_modules/.bin/electron electron/schedule-smoke.cjs
+node --test tests/deadline.test.cjs tests/reminders.test.cjs tests/store.test.cjs
+node_modules/.bin/electron tests/popover-smoke.cjs
+node_modules/.bin/electron tests/deadline-smoke.cjs
+node_modules/.bin/electron tests/schedule-smoke.cjs
 ```
 
 运行测试使用独立临时目录，不修改真实记录。真实 Windows 通知、输入法、多显示器/高 DPI、开机登录及安装流程仍需人工验收。
 
 ## 文档与资源
 
-[完整功能说明](QuickNote-功能全览.md)。assets 包含用户提供的粉色小龙品牌素材、SVG 操作图标和多尺寸 ICO。原素材及其来源说明保留；依赖许可证见 THIRD_PARTY_NOTICES.md。
+完整的个人功能说明与历史截图保留在本地桌面，不上传仓库。assets 包含用户提供的粉色小龙品牌素材、SVG 操作图标和多尺寸 ICO。原素材及其来源说明保留；依赖许可证见 THIRD_PARTY_NOTICES.md。
 
 ## 版本管理
 
