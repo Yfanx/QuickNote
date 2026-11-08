@@ -24,3 +24,5 @@
 - 发布后可运行tests/github-update-check.cjs核对公开GitHub源；完整NSIS覆盖安装及系统通知实际送达仍须实机验收，不等同上述替身测试。
 
 ![更新界面示例](images/updates.png)
+
+发布后公开 GitHub 更新源实测通过：按4.3.1版本身份读取打包配置，识别4.4.0及正确安装包和SHA512元数据；未执行覆盖安装。
