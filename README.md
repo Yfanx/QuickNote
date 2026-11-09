@@ -1,6 +1,6 @@
 # QuickNote
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.6.0**。
+Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.7.0**。
 
 ![Quick Capture](docs/images/capture.png)
 
@@ -9,7 +9,7 @@ Windows 本地快速记录与时间待办工具。Electron + React + TypeScript 
 - Ctrl+Shift+Space 唤出快速记录，Ctrl+Shift+G 打开待办；再次按相同快捷键隐藏，旧配置保留。
 - Enter 保存、Shift+Enter 换行，输入法组合保护，草稿与日期选项本地保存。
 - 首页输入框右下角日历/旗帜打开 When 与 Deadline。When 支持 Today、今晚、展开月历和Someday（以后再做，不设日期），Deadline 首页只选日期。
-- 首页移除数量标签与最近记录；待办分类为收件箱、今天、即将到来、任意时间、以后、日历、截止日期。即将到来涵盖所有未来日期；任意时间平铺汇总全部未完成任务，包含已安排日期及以后事项。
+- 首页移除数量标签与最近记录；左侧分类为收件箱、今天、即将到来、任意时间、以后、截止日期；日历从右上角进入。即将到来涵盖所有未来日期；任意时间平铺汇总全部未完成任务，包含已安排日期及以后事项。
 - 待办底部 Enter 直接保存，默认继承当前分类日期；已有任务可打开详情编辑。
 - 计划日期与截止日期独立；时间轴、Deadline 与月历引用同一条任务。
 - 左侧 Deadline 集中查看未完成截止任务：移除顶部选项，按逾期与英文月份分组并横线分隔，右侧只显示 days left / days past。
@@ -30,7 +30,7 @@ npm run build
 npm run dist
 ```
 
-NSIS 输出 release/4.6.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
+NSIS 输出 release/4.7.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
 
 ## 本地数据
 
@@ -77,7 +77,7 @@ main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 �
 发布安装包时，先创建草稿Release，上传EXE、blockmap、latest.yml并校验后再公开，避免客户端读到不完整更新。执行：
 
 ```powershell
-node scripts/publish-release.cjs 4.6.0 release/4.6.0/QuickNote-Setup-4.6.0-x64.exe
+node scripts/publish-release.cjs 4.7.0 release/4.7.0/QuickNote-Setup-4.7.0-x64.exe
 # 发布后，真实GitHub源检查，不下载、不执行安装程序
 node_modules/.bin/electron tests/github-update-check.cjs
 ```
@@ -108,4 +108,14 @@ Today/This evening及分类默认的今天、即将到来按相对日期处理�
 
 更新库的取消令牌同时绑定实际HTTP请求，包含重定向后的请求，避免界面取消但后台继续下载。取消完成前不启动新下载，下载完成与取消竞态不误报。缓存完整包可复用，但不承诺断点续传。
 
-截图为隔离测试中的4.7.0示例，不代表已发布4.7.0。软件正常情况下显示GitHub真实版本和更新内容。
+截图为隔离测试中的4.8.0示例，不代表已发布4.8.0。软件正常情况下显示GitHub真实版本和更新内容。
+
+## 中国日历（4.7.0）
+
+右上角日历为唯一入口，打开时高亮，再次点击返回上次任务分类。月份与选中日期继续记忆。主月历在日期下方显示春节、中秋等传统节日、常见纪念日期及二十四节气；普通日期留白，悬停查看农历。重合日期只显示一个短标签，完整名称保留在悬停信息中。不标记放假/调休，不生成任务或提醒。
+
+日历计算全部离线，首次打开主日历才加载相关代码；快速记录启动包不加载节日计算模块。原有记录、计划日期和截止日期保持兼容。
+
+![冬至月份](docs/images/calendar-winter.png)
+
+![春节月份](docs/images/calendar-spring.png)

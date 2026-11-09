@@ -1,5 +1,5 @@
 import {useRef,useState,useCallback} from 'react';
-export type Workspace={filter?:string;calendarDate?:string;month?:string;scroll:Record<string,number>};
+export type Workspace={filter?:string;returnFilter?:string;calendarDate?:string;month?:string;scroll:Record<string,number>};
 export function useWorkspace(onError:(message:string)=>void){
   const [workspace,setWorkspace]=useState<Workspace>({scroll:{}}),current=useRef(workspace),hydrated=useRef(false);
   const hydrate=(value:Workspace|undefined)=>{if(hydrated.current)return false;hydrated.current=true;current.current={...value,scroll:value?.scroll||{}};setWorkspace(current.current);return true};

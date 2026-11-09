@@ -13,7 +13,7 @@ async function main(){
   const headers={Authorization:'Bearer '+fields.password,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'QuickNote-Release'},base='https://api.github.com/repos/Yfanx/QuickNote';
   async function request(url,method='GET',body){const r=await fetch(url,{method,headers:{...headers,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error('GitHub API '+r.status);return r.status===204?null:r.json()}
   const releases=await request(base+'/releases?per_page=100');let release=releases.find(r=>r.tag_name==='v'+version);
-  if(!release)release=await request(base+'/releases','POST',{tag_name:'v'+version,name:'QuickNote '+version,draft:true,prerelease:false,body:'更新内容\n- 支持取消下载，停止后台传输。\n- 下载失败可直接重试，无需重新检查。\n- 更新界面显示版本、简短更新内容、进度与速度。\n\n---\n\n新增软件内更新：启动后后台检查，设置→关于可手动检查、下载与重启安装，保留任务和设置。4.3.x 及更早版本需先手动安装本版一次。\n\nWindows x64 安装包：QuickNote-Setup-'+version+'-x64.exe。latest.yml 与 blockmap 用于自动更新。'});
+  if(!release)release=await request(base+'/releases','POST',{tag_name:'v'+version,name:'QuickNote '+version,draft:true,prerelease:false,body:'更新内容\n- 日历统一从右上角进入，再次点击返回原任务列表。\n- 月历增加传统节日与二十四节气，普通日期保持简洁。\n- 节日离线计算、按需加载，保留计划与截止标记。\n\n---\n\n新增软件内更新：启动后后台检查，设置→关于可手动检查、下载与重启安装，保留任务和设置。4.3.x 及更早版本需先手动安装本版一次。\n\nWindows x64 安装包：QuickNote-Setup-'+version+'-x64.exe。latest.yml 与 blockmap 用于自动更新。'});
   // Publish only after every asset is ready, so clients never see an incomplete update.
   for(const file of [installer,blockmap,metadata]){
     const name=path.basename(file),existing=release.assets.find(a=>a.name===name);

@@ -1,6 +1,6 @@
 {
   "name": "quicknote",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "Keyboard-driven local quick capture",
   "author": "QuickNote",
   "main": "electron/main.cjs",
@@ -14,7 +14,7 @@
     "appId": "local.quicknote.desktop",
     "productName": "QuickNote",
     "directories": {
-      "output": "release/4.6.0"
+      "output": "release/4.7.0"
     },
     "files": [
       "dist/**/*",
@@ -56,6 +56,7 @@
     "electron-updater": "^6.8.11",
     "framer-motion": "^14.10.1",
     "lucide-react": "^0.468.0",
+    "lunar-javascript": "^1.7.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
