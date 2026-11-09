@@ -1,121 +1,117 @@
-# QuickNote
+<div align="center">
+  <img src="assets/app-128.png" width="88" alt="QuickNote 粉色小龙图标" />
+  <h1>QuickNote</h1>
+  <p><strong>轻轻记下，慢慢完成。</strong></p>
+  <p>为 Windows 打造的极简桌面记录与待办工具。<br />一个快捷键，接住灵感，也安排下一件要做的事。</p>
+  <p>
+    <a href="https://github.com/Yfanx/QuickNote/releases/latest">下载安装</a> ·
+    <a href="#快速开始">快速开始</a> ·
+    <a href="#本地开发">本地开发</a> ·
+    <a href="https://github.com/Yfanx/QuickNote/issues">反馈问题</a>
+  </p>
+  <p><code>Windows 10 / 11</code> &nbsp; <code>本地存储</code> &nbsp; <code>无需账号</code></p>
+</div>
 
-Windows 本地快速记录与时间待办工具。Electron + React + TypeScript + Vite，无账号和云同步。当前版本 **4.7.0**。
+<br />
 
-![Quick Capture](docs/images/capture.png)
+<p align="center">
+  <img src="docs/images/capture.png" width="470" alt="QuickNote 快速记录窗口" />
+</p>
 
-## 使用
+## 随手记录，随时继续
 
-- Ctrl+Shift+Space 唤出快速记录，Ctrl+Shift+G 打开待办；再次按相同快捷键隐藏，旧配置保留。
-- Enter 保存、Shift+Enter 换行，输入法组合保护，草稿与日期选项本地保存。
-- 首页输入框右下角日历/旗帜打开 When 与 Deadline。When 支持 Today、今晚、展开月历和Someday（以后再做，不设日期），Deadline 首页只选日期。
-- 首页移除数量标签与最近记录；左侧分类为收件箱、今天、即将到来、任意时间、以后、截止日期；日历从右上角进入。即将到来涵盖所有未来日期；任意时间平铺汇总全部未完成任务，包含已安排日期及以后事项。
-- 待办底部 Enter 直接保存，默认继承当前分类日期；已有任务可打开详情编辑。
-- 计划日期与截止日期独立；时间轴、Deadline 与月历引用同一条任务。
-- 左侧 Deadline 集中查看未完成截止任务：移除顶部选项，按逾期与英文月份分组并横线分隔，右侧只显示 days left / days past。
-- 待办窗口显示品牌任务栏图标，快速记录和隐藏状态不显示。
-- 月历分别标记计划日期与截止日期，支持按日新建；当天日期使用粉色星标。
-- 编辑、复制、置顶、完成/删除、按钮与 Ctrl+Z 单层撤销。
-- 深色、浅色、跟随系统主题；托盘常驻、登录启动、实际快捷键状态。
-- 应用运行时提供 Windows 提醒，退出后不提醒；系统通知实际显示受 Windows 设置影响。
+QuickNote 把快速输入和任务整理放在两个恰好的空间里：需要记录时，唤出小巧的输入窗口；需要安排时，打开完整待办列表。深石墨色界面、克制的粉色点缀，以及陪伴在角落的小龙，让日常记录轻松一点。
 
-![Deadline picker](docs/images/deadline-picker.png)
+### 一个快捷键，开始记录
 
-## 开发与打包
+按下 **Ctrl + Shift + Space**，直接输入。Enter 保存后即可继续下一条，Shift + Enter 支持换行。文字草稿与日期选项保存在本地，下次打开接着写。
 
-```powershell
+### 给事情安排时间，也留一点余地
+
+计划日期决定什么时候做，Deadline 表示最晚什么时候完成，两者独立设置。今天、今晚、任意日期，或先放到 Someday，都可以从输入框旁边轻松选择。
+
+选好日期后，简短标签显示在输入框左侧；截止任务显示剩余或逾期天数，时间信息一眼可见。
+
+### 用清晰的列表，找到下一件事
+
+| 视图 | 用途 |
+| --- | --- |
+| 收件箱 | 收下还没安排的事情 |
+| 今天 | 专注今天的安排 |
+| 即将到来 | 浏览未来日期的任务 |
+| 任意时间 | 汇总所有未完成事项 |
+| 以后 | 存放暂时不打算开始的事情 |
+| 截止日期 | 集中查看带 Deadline 的未完成任务 |
+
+任务支持编辑、复制、置顶、完成、删除与单步撤销。搜索帮助快速定位，分类和浏览位置会被记住。
+
+<p align="center">
+  <img src="docs/images/deadline-list.png" width="670" alt="按逾期与月份整理的截止日期列表" />
+</p>
+
+### 在月历里，看见安排
+
+右上角的日历入口，让列表和月历随时切换。计划日期与截止日期分别标记，也可以选中一天直接添加任务。
+
+月历包含农历信息、传统节日与二十四节气，离线计算。普通日期保持干净，悬停可查看详细信息；节日标注不代表官方放假或调休安排。
+
+<p align="center">
+  <img src="docs/images/calendar-winter.png" width="670" alt="带有传统节日与节气标注的月历" />
+</p>
+
+## 适合自己的桌面节奏
+
+- **两种入口**：快速记录保持轻巧，待办窗口提供任务栏入口，托盘随时可用。
+- **外观偏好**：深色、浅色与跟随系统，自定义输入框占位文字。
+- **使用偏好**：自定义全局快捷键、默认打开页面与开机启动。
+- **本地优先**：任务和设置存储在电脑上，支持 JSON 导入导出、自动备份与恢复；无需注册，不上传任务内容。
+
+## 快速开始
+
+从 [下载页面](https://github.com/Yfanx/QuickNote/releases/latest) 获取 Windows x64 安装包，运行安装后即可使用。
+
+| 快捷键 | 操作 |
+| --- | --- |
+| Ctrl + Shift + Space | 显示 / 隐藏快速记录 |
+| Ctrl + Shift + G | 显示 / 隐藏待办事项 |
+| Enter | 保存记录 |
+| Shift + Enter | 输入换行 |
+| Ctrl + Z | 撤销最近一次支持撤销的任务操作 |
+
+全局快捷键可在设置中修改；已有安装保留个人快捷键配置。关闭窗口后，QuickNote 继续驻留系统托盘，可通过托盘菜单退出。
+
+## 本地开发
+
+基于 **Electron · React · TypeScript · Vite** 构建，使用 Framer Motion 处理界面动画，JSON 保存本地数据，electron-builder 生成 Windows NSIS 安装包。
+
+```bash
 npm install
 npm run dev
-npm run build
-npm run dist
 ```
 
-NSIS 输出 release/4.7.0，安装包与 node_modules/dist 均不提交 Git。未配置代码签名。图标构建：node assets/build4.cjs。
-
-## 本地数据
-
-沿用 Electron userData 下 notes.json，通常 %APPDATA%/quicknote，可在设置定位。dataVersion5，旧 dueDate 保留为计划日期，deadlineDate/deadlineTime/reminderAt 独立。旧备忘录和分类不删除。临时文件 + fsync + 重命名，滚动 .bak、升级 .pre5-backup、导入/恢复前备份；每日最多一份快照，保留最近七份。恢复有结构校验和确认。
-
-## 验证
-
-```powershell
-node --test tests/deadline.test.cjs tests/reminders.test.cjs tests/store.test.cjs
-node_modules/.bin/electron tests/popover-smoke.cjs
-node_modules/.bin/electron tests/deadline-smoke.cjs
-node_modules/.bin/electron tests/schedule-smoke.cjs
+```bash
+npm run build   # 类型检查与前端构建
+npm test        # 单元测试与 Electron 回归检查
+npm run dist    # 生成 Windows 安装包
 ```
 
-运行测试使用独立临时目录，不修改真实记录。真实 Windows 通知、输入法、多显示器/高 DPI、开机登录及安装流程仍需人工验收。
+安装包输出到 `release/` 下的版本目录。自动化测试使用独立临时数据，不修改日常记录。测试范围见 [测试报告](docs/TEST_REPORT.md)，Windows 实机检查见 [Windows 验收说明](docs/WINDOWS_ACCEPTANCE.md)。
 
-## 文档与资源
+### 数据与项目结构
 
-完整的个人功能说明与历史截图保留在本地桌面，不上传仓库。assets 包含用户提供的粉色小龙品牌素材、SVG 操作图标和多尺寸 ICO。原素材及其来源说明保留；依赖许可证见 THIRD_PARTY_NOTICES.md。
+本地数据通常位于 `%APPDATA%/quicknote`，也可以在设置中定位。导入与恢复前会保留备份，自动快照保留最近七份。
 
-## 版本管理
-
-main 分支保留可构建版本，版本标签与 package.json 对应。4.1.1 为 Git 初始基线，4.3.1 为简化截止列表、任意时间汇总与 Today 星标。远端：https://github.com/Yfanx/QuickNote 。
-
-全功能自动化回归：npm test。范围与未实机验收项见 [测试报告](docs/TEST_REPORT.md)。
-
-## 日期标签与输入设置
-选择计划或截止日期后，标签动态移到输入框左下角，对应右侧图标淡出。日期显示 Today / Tomorrow / 本周星期 / 跨周星期与英文月份缩写；截止日期附自然日剩余天数，逾期显示 overdue。点击左侧标签可修改或清除。待办底部与主页相同，Enter 直接保存，无加号；保留所在分类/日历默认日期。设置→外观可修改快速记录占位文字，离开输入框即保存，主页与待办同步。GitHub Release 提供 Windows 安装包下载。
-
-## 简化截止列表（4.3.1）
-
-![截止日期列表](docs/images/deadline-list.png)
-
-任务日期使用 Today / Tomorrow / 本周星期等摘要，完整日期可通过悬停或任务详情查看。Deadline 按本地自然日计算剩余及逾期天数，保留旧数据与高级时间设置；本次仅改变展示。跨年月份附年份。
-
-## 软件更新（4.4.0）
-
-安装版启动20秒后检查 GitHub Releases，之后每6小时检查。发现新版后在标题栏显示更新入口；通知开关开启且系统支持时，也会发送一次Windows提示。设置→关于可手动检查、下载、查看进度、重启安装。联网失败可重试；不自动下载、不在退出时静默安装，不上传任务内容。安装前刷新已持久化草稿，继续使用原有数据目录和appId。
-
-**4.3.x及更早版本需要手动安装4.4.0一次，之后才能在软件内更新。** 更新依赖公开GitHub可访问性，开发模式禁用联网检查。NSIS未配置数字证书。
-
-安排日期顶部快捷选项显示Today文字，只有月历当天数字使用星标；保留Someday，底部三枚按钮合并为单个清除安排。
-
-发布安装包时，先创建草稿Release，上传EXE、blockmap、latest.yml并校验后再公开，避免客户端读到不完整更新。执行：
-
-```powershell
-node scripts/publish-release.cjs 4.7.0 release/4.7.0/QuickNote-Setup-4.7.0-x64.exe
-# 发布后，真实GitHub源检查，不下载、不执行安装程序
-node_modules/.bin/electron tests/github-update-check.cjs
+```text
+electron/   窗口、托盘、快捷键与本地存储
+src/        React 界面、日期交互与主题样式
+assets/     应用图标与桌面资源
+public/     品牌素材
+tests/      单元测试与桌面交互检查
+docs/       界面截图与验证文档
 ```
 
-实现参照 [electron-builder v26 自动更新文档](https://www.electron.build/v26/docs/features/auto-update/)。
+第三方依赖的许可证与声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
-4.4.1：精简外观与关于页的说明性小字，保留更新状态、操作与许可证入口。
+---
 
-设置→行为→默认打开：可选择待办事项或快速记录（默认待办）。点击托盘图标、重复启动或非后台启动使用此偏好；两个全局快捷键及托盘明确入口不受影响。
-
-![默认打开设置](docs/images/behavior.png)
-
-4.4.2：修复开机启动开关回弹。注册和读取使用同一可执行路径及--background参数，核对Windows启用状态；设置和托盘同步，其他偏好修改不重复改写启动项。
-
-## 浏览位置与日期刷新（4.5.0）
-
-待办记住上次分类、每个分类的滚动位置、日历月份与选中日期，重新打开或重启后恢复。状态保存在原本地配置文件中，不另建任务库；搜索结果的临时滚动不覆盖分类位置。
-
-Today/This evening及分类默认的今天、即将到来按相对日期处理。午夜、唤醒、解锁、重新唤出时刷新，提交前再次计算；月历明确选定的日期、旧版无相对标记草稿和已有任务不会自动改日期。原本“今天”列表保存后重开丢失默认日期的问题一并修复。
-
-真实Windows验收使用独立appId与独立示例数据，实际完成NSIS旧版安装→新版覆盖→记录及设置保留、启动项注册/关闭、后台参数启动、100%/125%/150%/200%进程DPI检查。含空格路径的启动命令已修复为带引号路径。仅有一块物理显示器，多屏负坐标使用模拟拓扑；未重启或休眠当前电脑。详见[Windows验收](docs/WINDOWS_ACCEPTANCE.md)。
-
-## 更新界面与下载控制（4.6.0）
-
-关于页使用紧凑品牌行和更新卡片，显示目标版本、发布日期、简短更新内容。下载时显示百分比、已下载/总大小和速度，可取消传输；取消后可重新下载，下载失败可直接重试。检查失败提供重新检查，安装仍需确认。更新内容按纯文本显示，不执行远程HTML。
-
-![下载中](docs/images/update-downloading.png)
-
-更新库的取消令牌同时绑定实际HTTP请求，包含重定向后的请求，避免界面取消但后台继续下载。取消完成前不启动新下载，下载完成与取消竞态不误报。缓存完整包可复用，但不承诺断点续传。
-
-截图为隔离测试中的4.8.0示例，不代表已发布4.8.0。软件正常情况下显示GitHub真实版本和更新内容。
-
-## 中国日历（4.7.0）
-
-右上角日历为唯一入口，打开时高亮，再次点击返回上次任务分类。月份与选中日期继续记忆。主月历在日期下方显示春节、中秋等传统节日、常见纪念日期及二十四节气；普通日期留白，悬停查看农历。重合日期只显示一个短标签，完整名称保留在悬停信息中。不标记放假/调休，不生成任务或提醒。
-
-日历计算全部离线，首次打开主日历才加载相关代码；快速记录启动包不加载节日计算模块。原有记录、计划日期和截止日期保持兼容。
-
-![冬至月份](docs/images/calendar-winter.png)
-
-![春节月份](docs/images/calendar-spring.png)
+<p align="center">留住眼前的想法，专注接下来的行动。</p>
