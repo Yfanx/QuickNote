@@ -7,7 +7,7 @@ let skip=true;const setSkip=BrowserWindow.prototype.setSkipTaskbar;BrowserWindow
 require('../electron/main.cjs');const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 app.whenReady().then(()=>setTimeout(async()=>{try{
  const w=BrowserWindow.getAllWindows()[0],js=s=>w.webContents.executeJavaScript(s),call=(a,p)=>js(`window.quicknote.call(${JSON.stringify(a)},${JSON.stringify(p)??'null'})`);
- await call('show','tasks');assert.equal(skip,false);await call('show','capture');assert.equal(skip,true);await call('show','tasks');await call('hide');await sleep(200);assert.equal(skip,true);
+ await call('show','tasks');assert.equal(skip,false);await call('show','capture');assert.equal(skip,true);await call('show','tasks');await call('hide');await sleep(200);assert.equal(w.isVisible(),false);assert.equal(skip,false);
  await call('show','capture');await js(`document.querySelector('[title="安排计划日期"]').click()`);
  assert.equal(await js(`document.querySelector('.when-shortcuts button').textContent.trim()`),'Today 今天');
  assert.equal(await js(`document.querySelectorAll('.date-popover>.date-chips').length`),0);
